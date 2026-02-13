@@ -61,6 +61,18 @@ func registerInvoiceTools(s *server.MCPServer, r *registry) {
 	)
 
 	s.AddTool(
+		mcp.NewTool("fakturoid_invoice_send",
+			mcp.WithDescription("Send an invoice via email. Uses #link# in message to insert invoice link."),
+			mcp.WithNumber("invoice_id", mcp.Required(), mcp.Description("Invoice ID")),
+			mcp.WithString("email", mcp.Required(), mcp.Description("Recipient email address")),
+			mcp.WithString("email_copy", mcp.Description("CC email address")),
+			mcp.WithString("subject", mcp.Description("Email subject (Fakturoid uses default if empty)")),
+			mcp.WithString("message", mcp.Description("Email body (use #link# for invoice link, Fakturoid uses default if empty)")),
+		),
+		invoiceSendHandler(r),
+	)
+
+	s.AddTool(
 		mcp.NewTool("fakturoid_invoice_payments",
 			mcp.WithDescription("List payments for an invoice"),
 			mcp.WithNumber("invoice_id", mcp.Required(), mcp.Description("Invoice ID")),
@@ -169,6 +181,32 @@ func invoiceDeleteHandler(r *registry) server.ToolHandlerFunc {
 			return mcp.NewToolResultError(fmt.Sprintf("Failed to delete invoice: %v", err)), nil
 		}
 		return mcp.NewToolResultText(fmt.Sprintf("Invoice %d deleted", id)), nil
+	}
+}
+
+func invoiceSendHandler(r *registry) server.ToolHandlerFunc {
+	return func(ctx context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+		invoiceID := intParam(req, "invoice_id", 0)
+		if invoiceID == 0 {
+			return mcp.NewToolResultError("invoice_id is required"), nil
+		}
+		email := req.GetString("email", "")
+		if email == "" {
+			return mcp.NewToolResultError("email is required"), nil
+		}
+
+		sendReq := fakturoid.SendInvoiceRequest{
+			Email:     email,
+			EmailCopy: req.GetString("email_copy", ""),
+			Subject:   req.GetString("subject", ""),
+			Message:   req.GetString("message", ""),
+		}
+
+		err := r.client.SendInvoice(invoiceID, sendReq)
+		if err != nil {
+			return mcp.NewToolResultError(fmt.Sprintf("Failed to send invoice: %v", err)), nil
+		}
+		return mcp.NewToolResultText(fmt.Sprintf("Invoice %d sent to %s", invoiceID, email)), nil
 	}
 }
 

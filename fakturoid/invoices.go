@@ -46,6 +46,10 @@ func (c *Client) DeleteInvoice(id int) error {
 	return c.do("DELETE", fmt.Sprintf("/invoices/%d.json", id), nil, nil)
 }
 
+func (c *Client) SendInvoice(invoiceID int, req SendInvoiceRequest) error {
+	return c.do("POST", fmt.Sprintf("/invoices/%d/message.json", invoiceID), req, nil)
+}
+
 func (c *Client) GetInvoicePayments(invoiceID int) ([]InvoicePayment, error) {
 	var result []InvoicePayment
 	err := c.do("GET", fmt.Sprintf("/invoices/%d/payments.json", invoiceID), nil, &result)

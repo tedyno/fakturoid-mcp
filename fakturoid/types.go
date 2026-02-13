@@ -50,6 +50,13 @@ type UpdateInvoiceRequest struct {
 	DueOn     string        `json:"due_on,omitempty"`
 }
 
+type SendInvoiceRequest struct {
+	Email     string `json:"email"`
+	EmailCopy string `json:"email_copy,omitempty"`
+	Subject   string `json:"subject,omitempty"`
+	Message   string `json:"message,omitempty"`
+}
+
 // --- Subject (Contact) ---
 
 type Subject struct {
