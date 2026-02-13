@@ -1,5 +1,7 @@
 package fakturoid
 
+import "encoding/json"
+
 // --- Invoice ---
 
 type Invoice struct {
@@ -23,11 +25,11 @@ type Invoice struct {
 }
 
 type InvoiceLine struct {
-	Name       string  `json:"name"`
-	Quantity   float64 `json:"quantity"`
-	UnitName   string  `json:"unit_name,omitempty"`
-	UnitPrice  string  `json:"unit_price"`
-	VATRate    float64 `json:"vat_rate"`
+	Name      string      `json:"name"`
+	Quantity  json.Number `json:"quantity"`
+	UnitName  string      `json:"unit_name,omitempty"`
+	UnitPrice json.Number `json:"unit_price"`
+	VATRate   json.Number `json:"vat_rate"`
 }
 
 type CreateInvoiceRequest struct {
@@ -108,11 +110,11 @@ type Expense struct {
 }
 
 type ExpenseLine struct {
-	Name      string  `json:"name"`
-	Quantity  float64 `json:"quantity"`
-	UnitName  string  `json:"unit_name,omitempty"`
-	UnitPrice string  `json:"unit_price"`
-	VATRate   float64 `json:"vat_rate"`
+	Name      string      `json:"name"`
+	Quantity  json.Number `json:"quantity"`
+	UnitName  string      `json:"unit_name,omitempty"`
+	UnitPrice json.Number `json:"unit_price"`
+	VATRate   json.Number `json:"vat_rate"`
 }
 
 // --- Account ---

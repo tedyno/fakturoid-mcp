@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
 	"sync"
 	"time"
 )
@@ -52,13 +51,14 @@ func (c *Client) authenticate() error {
 		return nil
 	}
 
-	data := url.Values{"grant_type": {"client_credentials"}}
-	req, err := http.NewRequest("POST", tokenURL, bytes.NewBufferString(data.Encode()))
+	payload, _ := json.Marshal(map[string]string{"grant_type": "client_credentials"})
+	req, err := http.NewRequest("POST", tokenURL, bytes.NewReader(payload))
 	if err != nil {
 		return fmt.Errorf("create token request: %w", err)
 	}
 	req.SetBasicAuth(c.clientID, c.clientSecret)
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", userAgent)
 
 	resp, err := c.httpClient.Do(req)
