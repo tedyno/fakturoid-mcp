@@ -1,6 +1,6 @@
 # fakturoid-mcp
 
-MCP server for [Fakturoid](https://www.fakturoid.cz/) written in Go. Lightweight alternative to the [TypeScript version](https://github.com/cookielab/fakturoid-mcp) — single 9 MB binary, ~12 MB RAM idle, no Node.js required.
+MCP server for [Fakturoid](https://www.fakturoid.cz/) written in Go. Lightweight alternative to the [TypeScript version](https://github.com/cookielab/fakturoid-mcp) — single ~6 MB binary, ~12 MB RAM idle, no Node.js required.
 
 ## Setup
 
@@ -35,6 +35,25 @@ Add to `~/.claude/settings.json`:
   "mcpServers": {
     "fakturoid": {
       "command": "/path/to/fakturoid-mcp"
+    }
+  }
+}
+```
+
+## Docker
+
+```json
+{
+  "mcpServers": {
+    "fakturoid": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "FAKTUROID_CLIENT_ID=your-client-id",
+        "-e", "FAKTUROID_CLIENT_SECRET=your-client-secret",
+        "-e", "FAKTUROID_SLUG=your-slug",
+        "tedyno/fakturoid-mcp:latest"
+      ]
     }
   }
 }
