@@ -32,6 +32,10 @@ jobs:
         with:
           go-version-file: go.mod
 
+      - name: Extract version
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+
       - name: Build
         env:
           GOOS: ${{ matrix.goos }}
@@ -39,11 +43,11 @@ jobs:
         run: |
           EXT=""
           if [ "$GOOS" = "windows" ]; then EXT=".exe"; fi
-          go build -ldflags="-s -w" -o fakturoid-mcp-${GOOS}-${GOARCH}${EXT} .
+          go build -ldflags="-s -w" -o fakturoid-mcp-${{ steps.version.outputs.version }}-${GOOS}-${GOARCH}${EXT} .
 
       - uses: actions/upload-artifact@v4
         with:
-          name: fakturoid-mcp-${{ matrix.goos }}-${{ matrix.goarch }}
+          name: fakturoid-mcp-${{ steps.version.outputs.version }}-${{ matrix.goos }}-${{ matrix.goarch }}
           path: fakturoid-mcp-*
 
   release:
