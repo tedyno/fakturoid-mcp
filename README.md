@@ -1,6 +1,18 @@
 # fakturoid-mcp
 
-MCP server for [Fakturoid](https://www.fakturoid.cz/) written in Go. Lightweight alternative to the [TypeScript version](https://github.com/cookielab/fakturoid-mcp) — single 9 MB binary, ~12 MB RAM idle, no Node.js required.
+MCP server for [Fakturoid](https://www.fakturoid.cz/) written in Go. Lightweight alternative to the [TypeScript version](https://github.com/cookielab/fakturoid-mcp) — single ~6 MB binary, ~12 MB RAM idle, no Node.js required.
+
+## Quick start (Claude Code)
+
+Paste this into Claude Code:
+
+**macOS / Linux:**
+
+> Download the latest fakturoid-mcp binary for my OS and architecture from https://github.com/tedyno/fakturoid-mcp/releases, make it executable, put it in ~/bin, and add it as an MCP server to my global Claude settings. My Fakturoid credentials: client_id `XXX`, client_secret `YYY`, slug `ZZZ` — save them to ~/.config/fakturoid-mcp/config.json.
+
+**Windows:**
+
+> Download fakturoid-mcp-windows-amd64.exe from https://github.com/tedyno/fakturoid-mcp/releases, put it in %USERPROFILE%\bin, and add it as an MCP server to my global Claude settings. My Fakturoid credentials: client_id `XXX`, client_secret `YYY`, slug `ZZZ` — save them to %USERPROFILE%\.config\fakturoid-mcp\config.json.
 
 ## Setup
 
@@ -35,6 +47,25 @@ Add to `~/.claude/settings.json`:
   "mcpServers": {
     "fakturoid": {
       "command": "/path/to/fakturoid-mcp"
+    }
+  }
+}
+```
+
+## Docker
+
+```json
+{
+  "mcpServers": {
+    "fakturoid": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "FAKTUROID_CLIENT_ID=your-client-id",
+        "-e", "FAKTUROID_CLIENT_SECRET=your-client-secret",
+        "-e", "FAKTUROID_SLUG=your-slug",
+        "tedyno/fakturoid-mcp:latest"
+      ]
     }
   }
 }

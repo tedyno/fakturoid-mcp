@@ -22,7 +22,7 @@ func main() {
 
 	s := server.NewMCPServer(
 		"fakturoid-mcp",
-		"0.1.0",
+		"1.0.0",
 		server.WithToolCapabilities(false),
 	)
 
